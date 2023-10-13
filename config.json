@@ -1,0 +1,9 @@
+{
+    "config" : {
+        "DB_SERVER":"localhost",
+        "DB_PORT":"5432",
+        "DB_USER":"postgres",
+        "DB_PASS":"admin",
+        "DB_NAME":"postgres"
+    }
+}
