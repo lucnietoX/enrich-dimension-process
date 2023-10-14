@@ -1,0 +1,2 @@
+docker-env/logs/
+docker-env/dags/__pycache__

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tabela com Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="menu">
+            <h1>Menu Superior</h1>
+        </div>
+        <button @click="gerenciar">Gerenciar</button>
+        <!-- Tabela Vue.js -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in items" :key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.nome }}</td>
+                    <td>{{ item.email }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                items: [
+                    { id: 1, nome: 'João', email: 'joao@email.com' },
+                    { id: 2, nome: 'Maria', email: 'maria@email.com' },
+                    { id: 3, nome: 'Pedro', email: 'pedro@email.com' }
+                ]
+            },
+            methods: {
+                gerenciar() {
+                    alert("Botão 'Gerenciar' clicado!");
+                    // Você pode adicionar mais funcionalidades aqui.
+                }
+            }
+        });
+    </script>
+</body>
+</html>
