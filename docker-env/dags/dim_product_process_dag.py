@@ -1,30 +1,36 @@
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.postgres_operator import PostgresOperator
+from airflow.decorators import dag, task
+from airflow.operators.email import EmailOperator
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from datetime import datetime
+import pandas as pd
 
-default_args = {
-    'owner': 'Luciano Nieto',
-    'start_date': datetime(2023, 10, 14),
-    'retries': 1,
-}
+# Defina o DAG
+@dag(schedule_interval=None, start_date=datetime(2023, 10, 15), catchup=False)
+def process_product_workflow():
+    @task()
+    def exec_select():
+        conn_id = 'postdw'
+        hook = PostgresHook(postgres_conn_id=conn_id)
+        sql = "SELECT * FROM dim_product where product_cluster is null"
+        df = pd.read_sql(sql, con=hook.get_sqlalchemy_engine())
+        return df
 
-dag = DAG(
-    'dim_product_process_dag',
-    default_args=default_args,
-    description='DAG for the Dim Product process validation',
-    schedule_interval=None,
-)
+    @task()
+    def processar_dataframe(df):
+        print(df.head())
 
-sqlquery = "select * from dim_product where product_cluster is null"
+    #resultado_query = exec_select()
+    
 
-postgres_task = PostgresOperator(
-    task_id='verify_dim_product',
-    sql=sqlquery,
-    postgres_conn_id='postdw',
-    dag=dag,
-)
+    send_email = EmailOperator(
+        task_id='send_email',
+        to='luciano.nieto@gmail.com',
+        subject="teste",
+        html_content="teste.."
+    )
 
-if __name__ == "__main__":
-    dag.cli()
+    #processar_dataframe(resultado_query) >> 
+    send_email
 
+dag = process_product_workflow()
